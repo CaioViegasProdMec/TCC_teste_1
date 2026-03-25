@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gêmeo Digital - Dashboard da Fábrica</title>
+    <title>Gemeo Digital - Dashboard da Fabrica</title>
     <script src="https://cdn.plot.ly/plotly-3.1.0.min.js"></script>
     <style>
         * {
@@ -18,8 +18,6 @@
             min-height: 100vh;
             padding: 20px;
         }
-        
-
         
         .container {
             max-width: 1400px;
@@ -156,10 +154,6 @@
             display: inline-block;
         }
         
-        .grafico-container {
-            margin-top: 20px;
-        }
-        
         @keyframes pulse {
             0% { transform: scale(1); }
             50% { transform: scale(1.05); }
@@ -176,46 +170,386 @@
             margin-top: 30px;
             opacity: 0.8;
         }
+        
+        .controle-item {
+            margin-bottom: 20px;
+        }
+        
+        .controle-item label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .controle-item input {
+            width: 100%;
+            margin: 10px 0;
+        }
+        
+        .btn-simular {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            width: 100%;
+            margin-top: 10px;
+            transition: transform 0.2s;
+        }
+        
+        .btn-simular:hover {
+            transform: scale(1.02);
+        }
+        
+        .simulacao-resultado {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .simulacao-resultado h3 {
+            margin: 0 0 10px 0;
+            font-size: 1em;
+            color: #667eea;
+        }
+        
+        .simulacao-resultado p {
+            margin: 5px 0;
+            font-size: 0.9em;
+        }
+        
+        .oee-gauge {
+            text-align: center;
+        }
+        
+        .gauge-container {
+            position: relative;
+            width: 200px;
+            height: 120px;
+            margin: 0 auto;
+        }
+        
+        .gauge-container svg {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .oee-value {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2em;
+            font-weight: bold;
+            color: #4caf50;
+        }
+        
+        .oee-metrics {
+            margin-top: 20px;
+            text-align: left;
+        }
+        
+        .metric {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9em;
+        }
+        
+        .metric span {
+            float: right;
+            font-weight: bold;
+            color: #2a5298;
+        }
+        
+        .indicadores-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+        }
+        
+        .indicador-item {
+            text-align: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .indicador-label {
+            display: block;
+            font-size: 0.8em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .indicador-valor {
+            display: block;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #1e3c72;
+        }
+        
+        .indicador-unidade {
+            font-size: 0.7em;
+            color: #999;
+        }
+        
+        .indicador-bar {
+            height: 4px;
+            background: #4caf50;
+            border-radius: 2px;
+            margin-top: 8px;
+            transition: width 0.3s;
+        }
+        
+        .sensores-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .sensor-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .sensor-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        
+        .sensor-label {
+            font-size: 0.8em;
+            color: #666;
+        }
+        
+        .sensor-valor {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #1e3c72;
+        }
+        
+        .sensor-alerta {
+            font-size: 0.7em;
+            color: #f44336;
+            margin-top: 5px;
+        }
+        
+        .manutencao-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .manut-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .manut-label {
+            display: block;
+            font-size: 0.7em;
+            color: #666;
+        }
+        
+        .manut-valor {
+            display: block;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #1e3c72;
+        }
+        
+        .manut-unidade {
+            font-size: 0.6em;
+            color: #999;
+        }
+        
+        .status-ok {
+            color: #4caf50;
+        }
+        
+        .status-falha {
+            color: #f44336;
+        }
+        
+        .top-defeitos-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .alerta {
+            background: #ffeb3b;
+            color: #856404;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8em;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1> Gêmeo Digital - Fábrica Inteligente</h1>
+        <h1>Gemeo Digital - Fabrica Inteligente</h1>
         
         <div class="grid">
-            <!-- Card: Última Detecção -->
             <div class="card">
-                <h2> Último Evento</h2>
+                <h2>Simulacao What-If</h2>
+                <div class="controle-item">
+                    <label for="velocidade">Velocidade da Esteira:</label>
+                    <input type="range" id="velocidade" min="0" max="100" value="50">
+                    <span id="veloValor">50</span>%
+                </div>
+                
+                <div class="controle-item">
+                    <label for="eficiencia">Eficiencia do Operador:</label>
+                    <input type="range" id="eficiencia" min="0" max="100" value="85">
+                    <span id="efiValor">85</span>%
+                </div>
+                
+                <button class="btn-simular" onclick="simularCenario()">Simular Cenário</button>
+                
+                <div id="simulacaoResultado" class="simulacao-resultado">
+                    <h3>Resultado da Simulacao</h3>
+                    <p id="simProducao">Aguardando simulacao...</p>
+                    <p id="simImpacto"></p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>OEE - Eficiencia Global</h2>
+                <div class="oee-gauge">
+                    <div class="gauge-container">
+                        <svg viewBox="0 0 200 120">
+                            <path id="gauge-bg" d="M20,100 A80,80 0 0,1 180,100" fill="none" stroke="#e0e0e0" stroke-width="20"/>
+                            <path id="gauge-fill" d="M20,100 A80,80 0 0,1 180,100" fill="none" stroke="#4caf50" stroke-width="20" stroke-dasharray="251.2" stroke-dashoffset="251.2"/>
+                        </svg>
+                        <div class="oee-value" id="oeeValor">0%</div>
+                    </div>
+                    <div class="oee-metrics">
+                        <div class="metric">Disponibilidade: <span id="dispValor">0%</span></div>
+                        <div class="metric">Performance: <span id="perfValor">0%</span></div>
+                        <div class="metric">Qualidade: <span id="qualValor">0%</span></div>
+                        <div class="metric">Total Produzido: <span id="totalPecas">0</span></div>
+                        <div class="metric">Defeitos: <span id="pecasDefeito">0</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="grid">
+            <div class="card">
+                <h2>Indicadores Industriais</h2>
+                <div class="indicadores-grid">
+                    <div class="indicador-item">
+                        <span class="indicador-label">Taxa de Defeito</span>
+                        <span class="indicador-valor" id="taxaDefeito">0%</span>
+                        <div class="indicador-bar" id="defeitoBar" style="width: 0%"></div>
+                    </div>
+                    <div class="indicador-item">
+                        <span class="indicador-label">Produtividade</span>
+                        <span class="indicador-valor" id="produtividade">0</span>
+                        <span class="indicador-unidade">pecas/hora</span>
+                    </div>
+                    <div class="indicador-item">
+                        <span class="indicador-label">Tempo Medio Ciclo</span>
+                        <span class="indicador-valor" id="tempoCiclo">0</span>
+                        <span class="indicador-unidade">segundos</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>Sensores Industriais</h2>
+                <div class="sensores-grid">
+                    <div class="sensor-item temperatura">
+                        <div class="sensor-icon">T</div>
+                        <div class="sensor-label">Temperatura</div>
+                        <div class="sensor-valor" id="temperatura">-- C</div>
+                        <div class="sensor-alerta" id="tempAlerta"></div>
+                    </div>
+                    <div class="sensor-item vibracao">
+                        <div class="sensor-icon">V</div>
+                        <div class="sensor-label">Vibracao</div>
+                        <div class="sensor-valor" id="vibracao">-- mm/s</div>
+                        <div class="sensor-alerta" id="vibAlerta"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="grid">
+            <div class="card">
+                <h2>Manutencao</h2>
+                <div class="manutencao-grid">
+                    <div class="manut-item">
+                        <span class="manut-label">Total de Falhas</span>
+                        <span class="manut-valor" id="totalFalhas">0</span>
+                    </div>
+                    <div class="manut-item">
+                        <span class="manut-label">MTBF</span>
+                        <span class="manut-valor" id="mtbf">--</span>
+                        <span class="manut-unidade">segundos</span>
+                    </div>
+                    <div class="manut-item">
+                        <span class="manut-label">MTTR</span>
+                        <span class="manut-valor" id="mttr">--</span>
+                        <span class="manut-unidade">segundos</span>
+                    </div>
+                    <div class="manut-item" id="statusFalha">
+                        <span class="manut-label">Status</span>
+                        <span class="manut-valor status-ok">Operacao Normal</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>Produtos com Mais Defeitos</h2>
+                <div id="topDefeitosLista">
+                    <p style="color: #999;">Nenhum defeito registrado</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="grid">
+            <div class="card">
+                <h2>Ultimo Evento</h2>
                 <div class="ultimo-evento" id="ultimoEvento">
-                    <h3>Peça Detectada</h3>
+                    <h3>Peca Detectada</h3>
                     <div class="objeto">---</div>
                     <div class="tempo">Aguardando dados...</div>
                 </div>
             </div>
             
-            <!-- Card: Contagem por Tipo -->
             <div class="card">
-                <h2> Produção por Tipo</h2>
+                <h2>Producao por Tipo</h2>
                 <div id="contagemLista">
                     <p style="color: #999;">Nenhum dado ainda</p>
                 </div>
-                <div class="total" id="total">Total: 0 peças</div>
-                <button class="btn-reset" onclick="resetContagem()"> Resetar Contagem</button>
+                <div class="total" id="total">Total: 0 pecas</div>
+                <button class="btn-reset" onclick="resetContagem()">Resetar Contagem</button>
             </div>
         </div>
         
         <div class="grid">
-            <!-- Card: Gráfico -->
             <div class="card">
-                <h2> Gráfico de Produção</h2>
+                <h2>Grafico de Producao</h2>
                 <div id="grafico" style="height: 400px;"></div>
             </div>
             
-            <!-- Card: Histórico de Eventos -->
             <div class="card">
-                <h2> Histórico em Tempo Real</h2>
+                <h2>Historico em Tempo Real</h2>
                 <div id="status" style="margin-bottom: 10px;">
-                    <span class="status"> Conectado</span>
+                    <span class="status">Conectado</span>
                 </div>
                 <div id="historicoLista" class="historico">
                     <p style="color: #999;">Nenhum evento registrado</p>
@@ -224,73 +558,67 @@
         </div>
         
         <div class="footer">
-            <p>Gêmeo Digital Didático | TCC | Percepção via YOLOv8 + MQTT</p>
+            <p>Gemeo Digital Didatico | TCC | Percepcao via YOLOv8 + MQTT</p>
         </div>
     </div>
     
     <script>
-        // Atualiza a cada 1 segundo
         let atualizacaoInterval;
         
         function atualizarDashboard() {
             fetch('/api/status')
                 .then(response => response.json())
                 .then(data => {
-                    // Atualiza último evento
                     const ultimoEventoDiv = document.getElementById('ultimoEvento');
                     if (data.ultimo_evento) {
-                        const objeto = data.ultimo_evento.objeto;
+                        const objeto = data.ultimo_evento.objeto || data.ultimo_evento.produto;
                         const timestamp = new Date(data.ultimo_evento.timestamp).toLocaleTimeString();
                         ultimoEventoDiv.innerHTML = `
-                            <h3>Última Peça Detectada</h3>
+                            <h3>Ultima Peca Detectada</h3>
                             <div class="objeto nova-deteccao">${objeto.toUpperCase()}</div>
                             <div class="tempo">${timestamp}</div>
                         `;
-                        // Remove a animação após 0.5s
                         setTimeout(() => {
                             const objDiv = document.querySelector('#ultimoEvento .objeto');
                             if (objDiv) objDiv.classList.remove('nova-deteccao');
                         }, 500);
                     }
                     
-                    // Atualiza contagem
                     const contagemLista = document.getElementById('contagemLista');
                     if (Object.keys(data.contagem).length > 0) {
                         let html = '';
                         for (const [objeto, quantidade] of Object.entries(data.contagem)) {
                             html += `
                                 <div class="contagem-item">
-                                    <span class="nome"> ${objeto.charAt(0).toUpperCase() + objeto.slice(1)}</span>
+                                    <span class="nome">${objeto.charAt(0).toUpperCase() + objeto.slice(1)}</span>
                                     <span class="numero">${quantidade} un.</span>
                                 </div>
                             `;
                         }
                         contagemLista.innerHTML = html;
-                        document.getElementById('total').innerHTML = `Total: ${data.total_eventos} peças`;
+                        document.getElementById('total').innerHTML = `Total: ${data.total_eventos} pecas`;
                     } else {
-                        contagemLista.innerHTML = '<p style="color: #999;">Nenhuma peça produzida ainda</p>';
+                        contagemLista.innerHTML = '<p style="color: #999;">Nenhuma peca produzida ainda</p>';
                     }
                     
-                    // Atualiza histórico
                     const historicoLista = document.getElementById('historicoLista');
                     if (data.historico && data.historico.length > 0) {
                         let html = '';
-                        // Mostra últimos 10 eventos (mais recentes primeiro)
                         const ultimos = [...data.historico].reverse().slice(0, 10);
                         for (const evento of ultimos) {
                             const hora = new Date(evento.timestamp).toLocaleTimeString();
+                            const nome = evento.objeto || evento.produto;
                             html += `
                                 <div class="historico-item">
-                                     ${hora} - 
-                                    <span class="objeto">${evento.objeto.toUpperCase()}</span> 
-                                    (conf: ${evento.confianca})
+                                    ${hora} - 
+                                    <span class="objeto">${nome.toUpperCase()}</span> 
+                                    (conf: ${evento.confianca || evento.tempo_ciclo})
                                 </div>
                             `;
                         }
                         historicoLista.innerHTML = html;
                     }
                     
-                    // Atualiza gráfico
                     if (data.dados_grafico && data.dados_grafico.contagem) {
                         const contagem = data.dados_grafico.contagem;
                         const objetos = Object.keys(contagem);
@@ -301,19 +629,15 @@
                             y: quantidades,
                             type: 'bar',
                             marker: {
-                                color: '#2a5298',
-                                gradient: {
-                                    type: 'vertical',
-                                    colorscale: 'Blues'
-                                }
+                                color: '#2a5298'
                             },
                             text: quantidades.map(q => `${q} un.`),
                             textposition: 'auto'
                         };
                         
                         const layout = {
-                            title: 'Produção por Tipo de Peça',
-                            xaxis: { title: 'Tipo de Peça' },
+                            title: 'Producao por Tipo de Peca',
+                            xaxis: { title: 'Tipo de Peca' },
                             yaxis: { title: 'Quantidade' },
                             plot_bgcolor: '#f8f9fa',
                             paper_bgcolor: 'white'
@@ -324,7 +648,7 @@
                 })
                 .catch(error => {
                     console.error('Erro ao buscar dados:', error);
-                    document.getElementById('status').innerHTML = '<span class="status" style="background:#dc3545;">🔴 Erro de conexão</span>';
+                    document.getElementById('status').innerHTML = '<span class="status" style="background:#dc3545;">Erro de conexao</span>';
                 });
         }
         
@@ -336,9 +660,182 @@
                 });
         }
         
-        // Inicia atualização periódica
-        atualizacaoInterval = setInterval(atualizarDashboard, 1000);
-        atualizarDashboard(); // Primeira atualização imediata
+        function atualizarOEE() {
+            fetch('/api/oee')
+                .then(response => response.json())
+                .then(data => {
+                    const oee = Math.round(data.oee);
+                    document.getElementById('oeeValor').innerHTML = oee + '%';
+                    
+                    document.getElementById('dispValor').innerHTML = Math.round(data.disponibilidade) + '%';
+                    document.getElementById('perfValor').innerHTML = Math.round(data.performance) + '%';
+                    document.getElementById('qualValor').innerHTML = Math.round(data.qualidade) + '%';
+                    document.getElementById('totalPecas').innerHTML = data.total_pecas;
+                    document.getElementById('pecasDefeito').innerHTML = data.pecas_defeituosas;
+                    
+                    const gaugeFill = document.getElementById('gauge-fill');
+                    const circumference = 251.2;
+                    const offset = circumference * (1 - data.oee / 100);
+                    gaugeFill.style.strokeDashoffset = offset;
+                    
+                    let color = '#f44336';
+                    if (data.oee >= 85) color = '#4caf50';
+                    else if (data.oee >= 60) color = '#ff9800';
+                    gaugeFill.style.stroke = color;
+                    document.getElementById('oeeValor').style.color = color;
+                })
+                .catch(error => console.error('Erro ao buscar OEE:', error));
+        }
+        
+        function atualizarIndicadores() {
+            fetch('/api/indicadores')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('taxaDefeito').innerHTML = data.taxa_defeito + '%';
+                    document.getElementById('produtividade').innerHTML = data.produtividade;
+                    document.getElementById('tempoCiclo').innerHTML = data.tempo_medio_ciclo;
+                    
+                    const barWidth = Math.min(100, data.taxa_defeito);
+                    document.getElementById('defeitoBar').style.width = barWidth + '%';
+                    if (data.taxa_defeito > 10) {
+                        document.getElementById('defeitoBar').style.background = '#f44336';
+                    } else {
+                        document.getElementById('defeitoBar').style.background = '#4caf50';
+                    }
+                    
+                    document.getElementById('temperatura').innerHTML = data.temperatura.atual + ' C';
+                    if (data.alertas.temperatura) {
+                        document.getElementById('tempAlerta').innerHTML = 'Alerta: Temperatura alta!';
+                    } else {
+                        document.getElementById('tempAlerta').innerHTML = '';
+                    }
+                    
+                    document.getElementById('vibracao').innerHTML = data.vibracao.atual + ' mm/s';
+                    if (data.alertas.vibracao) {
+                        document.getElementById('vibAlerta').innerHTML = 'Alerta: Vibracao excessiva!';
+                    } else {
+                        document.getElementById('vibAlerta').innerHTML = '';
+                    }
+                    
+                    document.getElementById('totalFalhas').innerHTML = data.manutencao.total_falhas;
+                    document.getElementById('mtbf').innerHTML = data.manutencao.mtbf;
+                    document.getElementById('mttr').innerHTML = data.manutencao.mttr;
+                    
+                    const statusDiv = document.getElementById('statusFalha');
+                    if (data.manutencao.falha_ativa) {
+                        statusDiv.innerHTML = `
+                            <span class="manut-label">Status</span>
+                            <span class="manut-valor status-falha">Falha Ativa</span>
+                        `;
+                    } else {
+                        statusDiv.innerHTML = `
+                            <span class="manut-label">Status</span>
+                            <span class="manut-valor status-ok">Operacao Normal</span>
+                        `;
+                    }
+                    
+                    const topDefeitosLista = document.getElementById('topDefeitosLista');
+                    if (data.top_defeitos && data.top_defeitos.length > 0) {
+                        let html = '';
+                        for (const [produto, quantidade] of data.top_defeitos) {
+                            html += `
+                                <div class="top-defeitos-item">
+                                    <span>${produto}</span>
+                                    <span style="color: #f44336;">${quantidade} defeitos</span>
+                                </div>
+                            `;
+                        }
+                        topDefeitosLista.innerHTML = html;
+                    } else {
+                        topDefeitosLista.innerHTML = '<p style="color: #999;">Nenhum defeito registrado</p>';
+                    }
+                })
+                .catch(error => console.error('Erro ao buscar indicadores:', error));
+        }
+        
+        function simularCenario() {
+            const velocidade = parseInt(document.getElementById('velocidade').value);
+            const eficiencia = parseInt(document.getElementById('eficiencia').value);
+            
+            fetch('/api/status')
+                .then(response => response.json())
+                .then(data => {
+                    const producaoAtual = data.total_eventos;
+                    
+                    if (producaoAtual === 0) {
+                        document.getElementById('simProducao').innerHTML = 'Aguardando primeira deteccao para simular...';
+                        document.getElementById('simImpacto').innerHTML = '';
+                        return;
+                    }
+                    
+                    const fatorVelocidade = velocidade / 50;
+                    const fatorEficiencia = eficiencia / 85;
+                    
+                    const novaProducao = Math.round(producaoAtual * fatorVelocidade * fatorEficiencia);
+                    const impacto = novaProducao - producaoAtual;
+                    const percentualImpacto = (impacto / producaoAtual * 100).toFixed(1);
+                    
+                    document.getElementById('simProducao').innerHTML = `
+                        Producao atual: ${producaoAtual} pecas
+                        Producao simulada: ${novaProducao} pecas
+                    `;
+                    
+                    let impactoHtml = '';
+                    let recomendacao = '';
+                    
+                    if (impacto > 0) {
+                        impactoHtml = `Aumento de ${impacto} pecas (+${percentualImpacto}%)`;
+                        if (velocidade > 80 && eficiencia > 80) {
+                            recomendacao = 'Excelente configuracao! Considere avaliar se ha gargalos no processo.';
+                        } else if (velocidade > 80) {
+                            recomendacao = 'Velocidade alta! Verifique se a esteira suporta essa cadencia.';
+                        } else if (eficiencia > 80) {
+                            recomendacao = 'Otima eficiencia do operador! Mantenha os treinamentos.';
+                        } else {
+                            recomendacao = 'Aumento positivo! Monitore os resultados em tempo real.';
+                        }
+                    } else if (impacto < 0) {
+                        impactoHtml = `Reducao de ${Math.abs(impacto)} pecas (${percentualImpacto}%)`;
+                        if (velocidade < 30) {
+                            recomendacao = 'Velocidade muito baixa. Aumentar a velocidade pode melhorar producao.';
+                        } else if (eficiencia < 50) {
+                            recomendacao = 'Eficiencia do operador baixa. Considere treinamento ou revisao do processo.';
+                        } else {
+                            recomendacao = 'Configuracao abaixo do ideal. Ajuste os parametros para melhorar.';
+                        }
+                    } else {
+                        impactoHtml = 'Nenhuma mudanca significativa';
+                        recomendacao = 'Configuracao equilibrada. Pequenos ajustes podem trazer ganhos.';
+                    }
+                    
+                    document.getElementById('simImpacto').innerHTML = `${impactoHtml}<br>${recomendacao}`;
+                });
+        }
+        
+        const velocidadeSlider = document.getElementById('velocidade');
+        const eficienciaSlider = document.getElementById('eficiencia');
+        
+        if (velocidadeSlider) {
+            velocidadeSlider.addEventListener('input', function() {
+                document.getElementById('veloValor').innerHTML = this.value;
+            });
+        }
+        
+        if (eficienciaSlider) {
+            eficienciaSlider.addEventListener('input', function() {
+                document.getElementById('efiValor').innerHTML = this.value;
+            });
+        }
+        
+        atualizacaoInterval = setInterval(() => {
+            atualizarDashboard();
+            atualizarOEE();
+            atualizarIndicadores();
+        }, 1000);
+        
+        atualizarDashboard();
+        atualizarOEE();
+        atualizarIndicadores();
     </script>
 </body>
 </html>
