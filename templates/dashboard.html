@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gêmeo Digital - Dashboard da Fábrica</title>
+    <script src="https://cdn.plot.ly/plotly-3.1.0.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card h2 {
+            color: #1e3c72;
+            border-bottom: 3px solid #2a5298;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .ultimo-evento {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .ultimo-evento h3 {
+            font-size: 1em;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+        
+        .ultimo-evento .objeto {
+            font-size: 3em;
+            font-weight: bold;
+        }
+        
+        .ultimo-evento .tempo {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-top: 10px;
+        }
+        
+        .contagem-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            font-size: 1.1em;
+        }
+        
+        .contagem-item .nome {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .contagem-item .numero {
+            color: #2a5298;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        
+        .total {
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 2px solid #2a5298;
+            font-weight: bold;
+            text-align: right;
+            font-size: 1.1em;
+        }
+        
+        .historico {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .historico-item {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+        
+        .historico-item .objeto {
+            font-weight: bold;
+            color: #2a5298;
+        }
+        
+        .btn-reset {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 15px;
+            width: 100%;
+            transition: background 0.3s;
+        }
+        
+        .btn-reset:hover {
+            background: #c82333;
+        }
+        
+        .status {
+            background: #28a745;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            display: inline-block;
+        }
+        
+        .grafico-container {
+            margin-top: 20px;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .nova-deteccao {
+            animation: pulse 0.5s ease;
+        }
+        
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 30px;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1> Gêmeo Digital - Fábrica Inteligente</h1>
+        
+        <div class="grid">
+            <!-- Card: Última Detecção -->
+            <div class="card">
+                <h2> Último Evento</h2>
+                <div class="ultimo-evento" id="ultimoEvento">
+                    <h3>Peça Detectada</h3>
+                    <div class="objeto">---</div>
+                    <div class="tempo">Aguardando dados...</div>
+                </div>
+            </div>
+            
+            <!-- Card: Contagem por Tipo -->
+            <div class="card">
+                <h2> Produção por Tipo</h2>
+                <div id="contagemLista">
+                    <p style="color: #999;">Nenhum dado ainda</p>
+                </div>
+                <div class="total" id="total">Total: 0 peças</div>
+                <button class="btn-reset" onclick="resetContagem()"> Resetar Contagem</button>
+            </div>
+        </div>
+        
+        <div class="grid">
+            <!-- Card: Gráfico -->
+            <div class="card">
+                <h2> Gráfico de Produção</h2>
+                <div id="grafico" style="height: 400px;"></div>
+            </div>
+            
+            <!-- Card: Histórico de Eventos -->
+            <div class="card">
+                <h2> Histórico em Tempo Real</h2>
+                <div id="status" style="margin-bottom: 10px;">
+                    <span class="status"> Conectado</span>
+                </div>
+                <div id="historicoLista" class="historico">
+                    <p style="color: #999;">Nenhum evento registrado</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Gêmeo Digital Didático | TCC | Percepção via YOLOv8 + MQTT</p>
+        </div>
+    </div>
+    
+    <script>
+        // Atualiza a cada 1 segundo
+        let atualizacaoInterval;
+        
+        function atualizarDashboard() {
+            fetch('/api/status')
+                .then(response => response.json())
+                .then(data => {
+                    // Atualiza último evento
+                    const ultimoEventoDiv = document.getElementById('ultimoEvento');
+                    if (data.ultimo_evento) {
+                        const objeto = data.ultimo_evento.objeto;
+                        const timestamp = new Date(data.ultimo_evento.timestamp).toLocaleTimeString();
+                        ultimoEventoDiv.innerHTML = `
+                            <h3>Última Peça Detectada</h3>
+                            <div class="objeto nova-deteccao">${objeto.toUpperCase()}</div>
+                            <div class="tempo">${timestamp}</div>
+                        `;
+                        // Remove a animação após 0.5s
+                        setTimeout(() => {
+                            const objDiv = document.querySelector('#ultimoEvento .objeto');
+                            if (objDiv) objDiv.classList.remove('nova-deteccao');
+                        }, 500);
+                    }
+                    
+                    // Atualiza contagem
+                    const contagemLista = document.getElementById('contagemLista');
+                    if (Object.keys(data.contagem).length > 0) {
+                        let html = '';
+                        for (const [objeto, quantidade] of Object.entries(data.contagem)) {
+                            html += `
+                                <div class="contagem-item">
+                                    <span class="nome"> ${objeto.charAt(0).toUpperCase() + objeto.slice(1)}</span>
+                                    <span class="numero">${quantidade} un.</span>
+                                </div>
+                            `;
+                        }
+                        contagemLista.innerHTML = html;
+                        document.getElementById('total').innerHTML = `Total: ${data.total_eventos} peças`;
+                    } else {
+                        contagemLista.innerHTML = '<p style="color: #999;">Nenhuma peça produzida ainda</p>';
+                    }
+                    
+                    // Atualiza histórico
+                    const historicoLista = document.getElementById('historicoLista');
+                    if (data.historico && data.historico.length > 0) {
+                        let html = '';
+                        // Mostra últimos 10 eventos (mais recentes primeiro)
+                        const ultimos = [...data.historico].reverse().slice(0, 10);
+                        for (const evento of ultimos) {
+                            const hora = new Date(evento.timestamp).toLocaleTimeString();
+                            html += `
+                                <div class="historico-item">
+                                     ${hora} - 
+                                    <span class="objeto">${evento.objeto.toUpperCase()}</span> 
+                                    (conf: ${evento.confianca})
+                                </div>
+                            `;
+                        }
+                        historicoLista.innerHTML = html;
+                    }
+                    
+                    // Atualiza gráfico
+                    if (data.dados_grafico && data.dados_grafico.contagem) {
+                        const contagem = data.dados_grafico.contagem;
+                        const objetos = Object.keys(contagem);
+                        const quantidades = Object.values(contagem);
+                        
+                        const trace = {
+                            x: objetos,
+                            y: quantidades,
+                            type: 'bar',
+                            marker: {
+                                color: '#2a5298',
+                                gradient: {
+                                    type: 'vertical',
+                                    colorscale: 'Blues'
+                                }
+                            },
+                            text: quantidades.map(q => `${q} un.`),
+                            textposition: 'auto'
+                        };
+                        
+                        const layout = {
+                            title: 'Produção por Tipo de Peça',
+                            xaxis: { title: 'Tipo de Peça' },
+                            yaxis: { title: 'Quantidade' },
+                            plot_bgcolor: '#f8f9fa',
+                            paper_bgcolor: 'white'
+                        };
+                        
+                        Plotly.newPlot('grafico', [trace], layout, {responsive: true});
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao buscar dados:', error);
+                    document.getElementById('status').innerHTML = '<span class="status" style="background:#dc3545;">🔴 Erro de conexão</span>';
+                });
+        }
+        
+        function resetContagem() {
+            fetch('/api/reset')
+                .then(() => {
+                    console.log('Contagem resetada');
+                    atualizarDashboard();
+                });
+        }
+        
+        // Inicia atualização periódica
+        atualizacaoInterval = setInterval(atualizarDashboard, 1000);
+        atualizarDashboard(); // Primeira atualização imediata
+    </script>
+</body>
+</html>
